@@ -1,7 +1,7 @@
 name = "StanBase"
 uuid = "d0ee94f6-a23d-54aa-bbe9-7f572d6da7f5"
 authors = ["Rob J Goedman <goedman@mac.com>"]
-version = "2.5.0"
+version = "3.0.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
