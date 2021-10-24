@@ -30,7 +30,6 @@ using Parameters
 
 using StanDump
 
-Int64(VERSION.minor) < 3 && include("utils/findall.jl")
 include("stanmodel/common_definitions.jl")
 include("stanmodel/shared_fields.jl")
 include("stanmodel/top_level_types.jl")
