@@ -25,12 +25,12 @@ if haskey(ENV, "JULIA_CMDSTAN_HOME")
     
     sm = HelpModel( "help", stan_prog)
 
-    return_codes = stan_sample(sm; n_chains=4)
+    rc = stan_help(sm)
 
-    if success(return_codes)
+    if success(rc)
       println()
       @test sm.method == StanBase.Help(:sample)
-      @test StanBase.get_n_chains(sm) == 4
+      @test sm.num_chains == 4
     end
 
   end

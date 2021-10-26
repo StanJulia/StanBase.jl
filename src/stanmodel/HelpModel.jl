@@ -1,27 +1,16 @@
 import Base.show
-using Random
 
-mutable struct HelpModel <: CmdStanModels	
-    @shared_fields_stanmodels
-    method::Help
+mutable struct HelpModel <: CmdStanModels
+    tmpdir::AbstractString;            # Hold all created files
+    log_file::AbstractString;          # Capture output help command
+    topic::AbstractString;             # Help (sub-)topic
 end
 
-function HelpModel(
-  name::AbstractString,
-  model::AbstractString,
-  n_chains=[4];
-  seed = RandomSeed(),
-  init = Init(),
-  output = Output(),
-  tmpdir = mktempdir(),
-  method = Help(:sample),
-  kwargs...)
+function HelpModel(tmpdir=mktempdir())
   
   !isdir(tmpdir) && mkdir(tmpdir)
   
-  StanBase.update_model_file(joinpath(tmpdir, "$(name).stan"), strip(model))
-  
-  output_base = joinpath(tmpdir, name)
+  output_base = joinpath(tmpdir, "Help")
   exec_path = executable_path(output_base)
   cmdstan_home = get_cmdstan_home()
 
@@ -31,20 +20,15 @@ function HelpModel(
                        stderr = error_output))
   end
   if !is_ok
-      throw(StanModelError(model, String(take!(error_output))))
+      throw(StanModelError("HelpModel", String(take!(error_output))))
   end
   
-  HelpModel(name, model, n_chains, seed, init, output,
-    tmpdir, output_base, exec_path, String[], String[], 
-    Cmd[], String[], String[], String[], false, false,
-    cmdstan_home, method)
+  HelpModel(tmpdir, "", "help-all")
 end
 
 function help_model_show(io::IO, m, compact::Bool)
-  println(io, "  name =                    \"$(m.name)\"")
-  println(io, "  method =                  $(m.method)")
-  println(io, "  n_chains =                $(get_n_chains(m))")
   println(io, "  tmpdir =                  \"$(m.tmpdir)\"")
+  println(io, "  topic =                  \"$(m.topic)\"")
 end
 
 show(io::IO, m::HelpModel) = help_model_show(io, m, false)

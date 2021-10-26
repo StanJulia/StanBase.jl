@@ -1,5 +1,5 @@
 data_union = Union{Nothing, AbstractString, Dict, Array{T, 1} where T}
-init_union = Union{Nothing, StanBase.Init, AbstractString, Dict, Array{T, 1} where T}
+init_union = Union{Nothing, AbstractString, Dict, Array{T, 1} where T}
 
 """
 
@@ -101,33 +101,17 @@ $(SIGNATURES)
 * `rc`                                 : Return code, 0 is success
 ```
 """
-function stan_sample(model::T; kwargs...) where {T <: CmdStanModels}
+function stan_run(m::T; kwargs...) where {T <: CmdStanModels}
 
-  n_chains = get_n_chains(model)
-  diagnostics = false
-  
-  # Diagnostics files requested?
-  if :diagnostics in keys(kwargs)
-    diagnostics = kwargs[:diagnostics]
-    setup_diagnostics(model, n_chains)
-  end
+  n_chains = m.num_chains
 
-  # Remove existing sample files
-  for id in 1:n_chains
-    sfile = sample_file_path(model.output_base, id)
-    isfile(sfile) && rm(sfile)
-  end
-
-  :init in keys(kwargs) && update_R_files(model, kwargs[:init], n_chains, "init")
-  :data in keys(kwargs) && update_R_files(model, kwargs[:data], n_chains, "data")
-
-  model.cmds = [stan_cmds(model, id; kwargs...) for id in 1:n_chains]
+  m.cmds = [stan_cmds(m, 1; kwargs...)]
 
   #println(typeof(model.cmds))
   #println()
-  #println(model.cmds)
+  println(m.cmds)
 
-  run(pipeline(par(model.cmds), stdout=model.log_file[1]))
+  run(pipeline(par(m.cmds), stdout=m.log_file[1]))
 end
 
 """
@@ -138,13 +122,9 @@ $(SIGNATURES)
 
 Internal, not exported.
 """
-function stan_cmds(model::T, id::Integer; kwargs...) where {T <: CmdStanModels}
-    append!(model.sample_file, [sample_file_path(model.output_base, id)])
-    append!(model.log_file, [log_file_path(model.output_base, id)])
-    if length(model.diagnostic_file) > 0
-      append!(model.diagnostic_file, [diagnostic_file_path(model.output_base, id)])
-    end
-    cmdline(model, id)
+function stan_cmds(m::T, id::Integer; kwargs...) where {T <: CmdStanModels}
+    append!(m.log_file, [log_file_path(m.output_base, id)])
+    cmdline(m, id)
 end
 
 """

@@ -35,9 +35,7 @@ function cmdline(model::HelpModel, id)
     cmd = `$(model.exec_path)`
 
     # `help` specific portion of the model
-    cmd = `$cmd $(getfield(model.method, :help)) help`
-
-    # In this simple case, no additional info is needed in the command line
+    cmd = `$cmd help-all`
   end
   
   cmd

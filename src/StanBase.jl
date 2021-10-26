@@ -30,18 +30,15 @@ using Parameters
 
 using StanDump
 
-include("stanmodel/common_definitions.jl")
-include("stanmodel/shared_fields.jl")
-include("stanmodel/top_level_types.jl")
-include("stanmodel/help_types.jl")
+include("common/common_definitions.jl")
+include("common/top_level_types.jl")
+include("common/par.jl")
+include("common/stan_run.jl")
+include("common/update_model_file.jl")
+
 include("stanmodel/HelpModel.jl")
-include("stanmodel/update_model_file.jl")
-include("stanmodel/number_of_chains.jl")
+
 include("stanrun/cmdline.jl")
-include("stanrun/stan_sample.jl")
-include("stansamples/stan_summary.jl")
-include("stansamples/read_summary.jl")
-include("utils/par.jl")
 
 """
 The directory which contains the cmdstan executables such as `bin/stanc` and
@@ -82,19 +79,11 @@ Alias for stan_sample(helpmodel,...)
 see ?HelpModel
 see ?stan_sample
 """
-stan_help = stan_sample
+stan_help = stan_run
 
 export
-  CMDSTAN_HOME,
-  @shared_fields_stanmodels,
-  CmdStanModels,
-  StanModelError,
   HelpModel,
-  cmdline,
   stan_help,
-  stan_sample,
-  read_summary,
-  stan_summary,
   get_cmdstan_home,
   set_cmdstan_home!
 
