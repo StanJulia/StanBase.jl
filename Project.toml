@@ -1,7 +1,7 @@
 name = "StanBase"
 uuid = "d0ee94f6-a23d-54aa-bbe9-7f572d6da7f5"
 authors = ["Rob J Goedman <goedman@mac.com>"]
-version = "4.12.2"
+version = "4.12.4"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -24,7 +24,7 @@ JSON = "0.21"
 NamedTupleTools = "0.14"
 OrderedCollections = "1.4.1"
 Parameters = "0.12"
-julia = "1"
+julia = "1.12.4"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
