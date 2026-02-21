@@ -1,4 +1,4 @@
-# StanBase v4.12.2
+# StanBase v4.12.4
 
 | **Project Status**          |  **Build Status** |
 |:---------------------------:|:-----------------:|
